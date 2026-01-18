@@ -1,5 +1,12 @@
 # @willh/git-setup
 
+## 1.4.3
+
+- Add `git ac` for generating commit messages using AIChat with improved diff filtering:
+  - Exclude minified files from diff analysis (*.min.js, *.min.css, *.min.*.js, *.min.*.css, *-min.js, *-min.css, *.bundle.js, *.bundle.min.js)
+  - Exclude binary files from diff using `--diff-filter=d` flag
+  - Add informative error messages when diff is too large or contains only excluded files
+
 ## 1.4.0
 
 - Add `git attributes` alias to display recommended `.gitattributes` file content
