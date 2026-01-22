@@ -139,6 +139,7 @@ Options:
     await cmd(`git config --global user.email  ${email}`);
 
     await cmdWithConfirm("git config --global help.autocorrect 30", interactive, ask);
+    await cmdWithConfirm("git config --global push.autoSetupRemote true", interactive, ask);
 
     await cmdWithConfirm("git config --global init.defaultBranch main", interactive, ask);
     await cmdWithConfirm("git config --global core.autocrlf input", interactive, ask);

@@ -46,6 +46,9 @@ git config --global user.email  ${email}
 # 設定打錯命令時 3 秒內會自動做出判斷
 git config --global help.autocorrect 30
 
+# 推送新分支時自動設定上游分支
+git config --global push.autoSetupRemote true
+
 # 設定預設分支名稱為 main
 git config --global init.defaultBranch main
 
@@ -147,7 +150,19 @@ git config --global core.editor notepad
     git config --global pull.rebase true
     ```
 
-4. `alias.ac` - AI 自動產生 commit 訊息
+4. `push.autoSetupRemote`
+
+    本工具已將 `push.autoSetupRemote` 設為 `true`，這樣在推送新分支時，Git 會自動設定上游分支，不再需要手動使用 `--set-upstream` 或 `-u` 選項。
+
+    例如，當你建立新分支並首次推送時：
+
+    ```sh
+    git checkout -b feature/new-feature
+    git commit -m "Add new feature"
+    git push  # 自動設定上游分支，不需要 git push -u origin feature/new-feature
+    ```
+
+5. `alias.ac` - AI 自動產生 commit 訊息
 
     此工具會自動設定 `git ac` 命令,當你的工作目錄有變更時,它會:
     - 自動偵測是否有已暫存 (staged) 的變更,若無則自動執行 `git add -A`
