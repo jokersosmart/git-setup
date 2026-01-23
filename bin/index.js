@@ -143,7 +143,7 @@ Options:
 
     await cmdWithConfirm("git config --global init.defaultBranch main", interactive, ask);
     await cmdWithConfirm("git config --global core.autocrlf input", interactive, ask);
-    await cmdWithConfirm("git config --global core.safecrlf true", interactive, ask);
+    await cmdWithConfirm("git config --global core.safecrlf false", interactive, ask);
     await cmdWithConfirm("git config --global core.quotepath false", interactive, ask);
 
     await cmdWithConfirm("git config --global color.diff auto", interactive, ask);
@@ -169,9 +169,15 @@ Options:
     // Helper function for escaping single quotes in shell strings
     const escapeForSingleQuotes = (s) => s.replace(/'/g, `'\\''`);
 
+    function buildAttributesAlias(content) {
+        const normalized = content.replace(/\r\n/g, '\n').replace(/\n$/, '');
+        const lines = normalized.split('\n');
+        const args = lines.map((line) => `'${escapeForSingleQuotes(line)}'`).join(' ');
+        return `!f() { printf '%s\\n' ${args}; }; f`;
+    }
+
     // --- add: alias.attributes (cross-platform) ---
-    const aliasAttributes = `!f() { cat <<'EOF'
-# --- 基本：自動偵測文字檔並正規化至 LF（倉庫內） ---
+    const gitattributesContent = `# --- 基本：自動偵測文字檔並正規化至 LF ---
 * text=auto
 
 # --- 一致化 LF（跨平台工具與 CI 友善） ---
@@ -326,8 +332,9 @@ Dockerfile   text eol=lf
 #/.gitignore     export-ignore
 #/.gitattributes export-ignore
 #/.editorconfig  export-ignore
-EOF
-}; f`;
+`;
+
+    const aliasAttributes = buildAttributesAlias(gitattributesContent);
 
     if (os === 'win32') {
         await cmdWithConfirm(`git config --global alias.attributes "${aliasAttributes.replace(/"/g, '\\"')}"`, interactive, ask);

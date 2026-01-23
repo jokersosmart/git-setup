@@ -54,7 +54,7 @@ git config --global init.defaultBranch main
 
 # 統一使用 LF 作為行尾字元，避免跨平台協作時的問題
 git config --global core.autocrlf input
-git config --global core.safecrlf true
+git config --global core.safecrlf false
 
 # 為了能正確顯示 UTF-8 中文字
 git config --global core.quotepath false
@@ -80,7 +80,7 @@ git config --global alias.ls   "log --show-signature"
 git config --global alias.ll   "log --pretty=format:'%h %ad | %s%d [%Cgreen%an%Creset]' --graph --date=short"
 git config --global alias.lg   "log --graph --pretty=format:'%Cred%h%Creset %ad |%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset [%Cgreen%an%Creset]' --abbrev-commit --date=short"
 git config --global alias.alias "config --get-regexp ^alias\."
-git config --global alias.attributes "!f() { cat <<'EOF' ... }; f"  # 顯示建議的 .gitattributes 檔案內容
+# 顯示建議的 .gitattributes 檔案內容（此 alias 由本工具自動設定，詳見下方說明）
 
 # 必須是 Windows 平台才會執行以下設定
 git config --global alias.ignore "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
@@ -123,21 +123,21 @@ git config --global core.editor notepad
 
 2. `core.autocrlf` 與 `core.safecrlf`
 
-    本工具採用跨平台統一的行尾字元處理方式，設定 `core.autocrlf=input` 與 `core.safecrlf=true`。
+    本工具採用跨平台統一的行尾字元處理方式，設定 `core.autocrlf=input` 與 `core.safecrlf=false`。
 
     - `core.autocrlf=input`：將工作目錄中的 CRLF 轉換為 LF 後存入版本庫，檢出時保持 LF 不變
-    - `core.safecrlf=true`：避免混合行尾字元被意外提交到版本庫
+    - `core.safecrlf=false`：不檢查混合行尾字元，避免因工具差異而阻擋提交
 
     由於現在大多數 Windows 編輯器都已經能正確處理 LF 字元，這樣的設定可以確保：
     - 版本庫內所有文字檔都使用 LF 行尾（跨平台一致）
-    - 避免因不同平台的行尾字元造成的 diff 問題
+    - 降低因不同平台的行尾字元造成的 diff 問題
     - 配合 `.gitattributes` 可以更精確控制特定檔案的行尾處理
 
-    如果因特殊需求需要調整回舊版設定，可以執行：
+    如果需要啟用嚴格檢查（拒絕混合行尾字元），可以執行：
 
     ```sh
-    git config --global core.autocrlf false
-    git config --global core.safecrlf false
+    git config --global core.autocrlf input
+    git config --global core.safecrlf true
     ```
 
 3. `pull.rebase`
